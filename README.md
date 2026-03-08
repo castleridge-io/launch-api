@@ -83,6 +83,9 @@ python launch-hybrid.py --dry-run
 
 ### 2. Reddit (Optional)
 
+**See [REDDIT_SETUP.md](REDDIT_SETUP.md) for detailed setup instructions.**
+
+Quick setup:
 1. Go to https://www.reddit.com/prefs/apps
 2. Create app (script type)
 3. Add to `.env`:
@@ -93,6 +96,7 @@ python launch-hybrid.py --dry-run
    REDDIT_USERNAME=your_username
    REDDIT_PASSWORD=your_password
    ```
+4. Test: `python reddit_setup.py --test`
 
 ### 3. Telegram (Optional)
 
