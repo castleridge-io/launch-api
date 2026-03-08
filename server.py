@@ -273,32 +273,90 @@ async def post_to_reddit(subreddit: str, title: str, text: str):
 # ============================================
 
 
-async def post_to_telegram(channel_id: str, text: str, parse_mode: str = "Markdown"):
-    """Post to Telegram via Bot API"""
+async def _post_to_telegram_internal(
+    channel_id: str, text: str, parse_mode: str = "Markdown"
+):
+    """Internal Telegram posting function (without retry)"""
     bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
 
     if not bot_token:
-        return {"success": False, "error": "Telegram bot token not configured"}
+        raise ValueError("Telegram bot token not configured")
 
     url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
 
     payload = {"chat_id": channel_id, "text": text, "parse_mode": parse_mode}
 
-    try:
-        response = requests.post(url, json=payload, timeout=10)
+    response = requests.post(url, json=payload, timeout=10)
 
-        if response.status_code == 200:
-            data = response.json()
-            return {
-                "success": True,
-                "platform": "telegram",
-                "post_id": str(data["result"]["message_id"]),
-                "url": f"https://t.me/c/{channel_id.replace('@', '').replace('-100', '')}/{data['result']['message_id']}",
-            }
+    if response.status_code == 200:
+        data = response.json()
+        return {
+            "success": True,
+            "platform": "telegram",
+            "post_id": str(data["result"]["message_id"]),
+            "url": f"https://t.me/c/{channel_id.replace('@', '').replace('-100', '')}/{data['result']['message_id']}",
+        }
+    else:
+        raise Exception(f"Telegram API error: {response.status_code} - {response.text}")
+
+
+async def post_to_telegram(channel_id: str, text: str, parse_mode: str = "Markdown"):
+    """Post to Telegram via Bot API with retry logic"""
+    try:
+        retry_config = RetryConfig(
+            max_retries=3,
+            base_delay=2.0,
+            max_delay=30.0,
+            exponential_base=2.0,
+            jitter=True,
+        )
+
+        result = await retry_async(
+            _post_to_telegram_internal,
+            channel_id,
+            text,
+            parse_mode,
+            config=retry_config,
+            platform="telegram",
+        )
+
+        if result.success:
+            return result.result
         else:
-            return {"success": False, "platform": "telegram", "error": response.text}
+            error = Exception(result.error)
+            error_log = error_logger.log_error(
+                "telegram", error, context={"channel_id": channel_id}
+            )
+
+            dead_letter_queue.add(
+                platform="telegram",
+                payload={
+                    "channel_id": channel_id,
+                    "text": text,
+                    "parse_mode": parse_mode,
+                },
+                error=result.error or "Unknown error",
+                attempts=result.attempts,
+                recoverable=True,
+            )
+
+            return {
+                "success": False,
+                "platform": "telegram",
+                "error": error_log.user_message,
+                "attempts": result.attempts,
+            }
+
     except Exception as e:
-        return {"success": False, "platform": "telegram", "error": str(e)}
+        error_log = error_logger.log_error(
+            "telegram", e, context={"channel_id": channel_id}
+        )
+        return {
+            "success": False,
+            "platform": "telegram",
+            "error": error_log.user_message,
+            "attempts": 1,
+        }
 
 
 # ============================================
@@ -306,19 +364,72 @@ async def post_to_telegram(channel_id: str, text: str, parse_mode: str = "Markdo
 # ============================================
 
 
-async def post_to_discord(webhook_url: str, text: str):
-    """Post to Discord via webhook"""
+async def _post_to_discord_internal(webhook_url: str, text: str):
+    """Internal Discord posting function (without retry)"""
     payload = {"content": text, "username": "Launch Bot"}
 
-    try:
-        response = requests.post(webhook_url, json=payload, timeout=10)
+    response = requests.post(webhook_url, json=payload, timeout=10)
 
-        if response.status_code == 204:
-            return {"success": True, "platform": "discord"}
+    if response.status_code == 204:
+        return {"success": True, "platform": "discord"}
+    else:
+        raise Exception(
+            f"Discord webhook error: {response.status_code} - {response.text}"
+        )
+
+
+async def post_to_discord(webhook_url: str, text: str):
+    """Post to Discord via webhook with retry logic"""
+    try:
+        retry_config = RetryConfig(
+            max_retries=3,
+            base_delay=1.0,
+            max_delay=20.0,
+            exponential_base=2.0,
+            jitter=True,
+        )
+
+        result = await retry_async(
+            _post_to_discord_internal,
+            webhook_url,
+            text,
+            config=retry_config,
+            platform="discord",
+        )
+
+        if result.success:
+            return result.result
         else:
-            return {"success": False, "platform": "discord", "error": response.text}
+            error = Exception(result.error)
+            error_log = error_logger.log_error(
+                "discord", error, context={"webhook_url": webhook_url[:30] + "..."}
+            )
+
+            dead_letter_queue.add(
+                platform="discord",
+                payload={"webhook_url": webhook_url, "text": text},
+                error=result.error or "Unknown error",
+                attempts=result.attempts,
+                recoverable=True,
+            )
+
+            return {
+                "success": False,
+                "platform": "discord",
+                "error": error_log.user_message,
+                "attempts": result.attempts,
+            }
+
     except Exception as e:
-        return {"success": False, "platform": "discord", "error": str(e)}
+        error_log = error_logger.log_error(
+            "discord", e, context={"webhook_url": webhook_url[:30] + "..."}
+        )
+        return {
+            "success": False,
+            "platform": "discord",
+            "error": error_log.user_message,
+            "attempts": 1,
+        }
 
 
 # ============================================
@@ -326,19 +437,72 @@ async def post_to_discord(webhook_url: str, text: str):
 # ============================================
 
 
-async def post_to_slack(webhook_url: str, text: str):
-    """Post to Slack via webhook"""
+async def _post_to_slack_internal(webhook_url: str, text: str):
+    """Internal Slack posting function (without retry)"""
     payload = {"text": text, "username": "Launch Bot", "icon_emoji": ":rocket:"}
 
-    try:
-        response = requests.post(webhook_url, json=payload, timeout=10)
+    response = requests.post(webhook_url, json=payload, timeout=10)
 
-        if response.status_code == 200:
-            return {"success": True, "platform": "slack"}
+    if response.status_code == 200:
+        return {"success": True, "platform": "slack"}
+    else:
+        raise Exception(
+            f"Slack webhook error: {response.status_code} - {response.text}"
+        )
+
+
+async def post_to_slack(webhook_url: str, text: str):
+    """Post to Slack via webhook with retry logic"""
+    try:
+        retry_config = RetryConfig(
+            max_retries=3,
+            base_delay=1.0,
+            max_delay=20.0,
+            exponential_base=2.0,
+            jitter=True,
+        )
+
+        result = await retry_async(
+            _post_to_slack_internal,
+            webhook_url,
+            text,
+            config=retry_config,
+            platform="slack",
+        )
+
+        if result.success:
+            return result.result
         else:
-            return {"success": False, "platform": "slack", "error": response.text}
+            error = Exception(result.error)
+            error_log = error_logger.log_error(
+                "slack", error, context={"webhook_url": webhook_url[:30] + "..."}
+            )
+
+            dead_letter_queue.add(
+                platform="slack",
+                payload={"webhook_url": webhook_url, "text": text},
+                error=result.error or "Unknown error",
+                attempts=result.attempts,
+                recoverable=True,
+            )
+
+            return {
+                "success": False,
+                "platform": "slack",
+                "error": error_log.user_message,
+                "attempts": result.attempts,
+            }
+
     except Exception as e:
-        return {"success": False, "platform": "slack", "error": str(e)}
+        error_log = error_logger.log_error(
+            "slack", e, context={"webhook_url": webhook_url[:30] + "..."}
+        )
+        return {
+            "success": False,
+            "platform": "slack",
+            "error": error_log.user_message,
+            "attempts": 1,
+        }
 
 
 # ============================================
@@ -472,6 +636,71 @@ async def slack_only(webhook_url: str, text: str, authorization: str = Header(No
     verify_api_key(authorization)
     result = await post_to_slack(webhook_url, text)
     return PostResponse(**result)
+
+
+# ============================================
+# Dead Letter Queue Management Endpoints
+# ============================================
+
+
+@app.get("/dead-letter-queue/stats")
+async def get_dlq_stats(authorization: str = Header(None)):
+    """Get dead letter queue statistics"""
+    verify_api_key(authorization)
+    return dead_letter_queue.stats()
+
+
+@app.get("/dead-letter-queue")
+async def get_dlq_posts(
+    platform: Optional[str] = None, authorization: str = Header(None)
+):
+    """Get failed posts from dead letter queue"""
+    verify_api_key(authorization)
+
+    if platform:
+        posts = dead_letter_queue.get_by_platform(platform)
+    else:
+        posts = dead_letter_queue.get_all()
+
+    return {"total": len(posts), "posts": [post.__dict__ for post in posts]}
+
+
+@app.delete("/dead-letter-queue/{post_id}")
+async def remove_from_dlq(post_id: str, authorization: str = Header(None)):
+    """Remove a post from the dead letter queue"""
+    verify_api_key(authorization)
+
+    if dead_letter_queue.remove(post_id):
+        return {"success": True, "message": f"Post {post_id} removed"}
+    else:
+        raise HTTPException(status_code=404, detail="Post not found")
+
+
+@app.post("/dead-letter-queue/{post_id}/retry")
+async def retry_dlq_post(post_id: str, authorization: str = Header(None)):
+    """Retry a failed post from the dead letter queue"""
+    verify_api_key(authorization)
+
+    payload = dead_letter_queue.retry_post(post_id)
+    if payload:
+        return {
+            "success": True,
+            "payload": payload,
+            "message": "Post removed from queue for retry",
+        }
+    else:
+        raise HTTPException(status_code=404, detail="Post not found or not recoverable")
+
+
+@app.get("/errors")
+async def get_recent_errors(
+    platform: Optional[str] = None, limit: int = 100, authorization: str = Header(None)
+):
+    """Get recent error logs"""
+    verify_api_key(authorization)
+
+    errors = error_logger.get_recent_errors(platform=platform, limit=limit)
+    return {"total": len(errors), "errors": [error.__dict__ for error in errors]}
 
 
 # ============================================
