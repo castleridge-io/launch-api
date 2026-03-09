@@ -1,0 +1,272 @@
+{
+  "reddit_20260308_095120_324678": {
+    "id": "reddit_20260308_095120_324678",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:51:20.324676",
+    "payload": {
+      "subreddit": "test",
+      "title": "Test Title",
+      "text": "Test content"
+    },
+    "error": "Invalid credentials",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:51:20.324676",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095120_328314": {
+    "id": "reddit_20260308_095120_328314",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:51:20.328313",
+    "payload": {
+      "subreddit": "nonexistent",
+      "title": "Test Title",
+      "text": "Test content"
+    },
+    "error": "Subreddit not found",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:51:20.328313",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095120_691287": {
+    "id": "reddit_20260308_095120_691287",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:51:20.691285",
+    "payload": {
+      "subreddit": "test",
+      "title": "Test",
+      "text": "Test"
+    },
+    "error": "received 401 HTTP response",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:51:20.691285",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095213_491480": {
+    "id": "reddit_20260308_095213_491480",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:52:13.491479",
+    "payload": {
+      "subreddit": "test",
+      "title": "Test Title",
+      "text": "Test content"
+    },
+    "error": "Invalid credentials",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:52:13.491479",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095213_495227": {
+    "id": "reddit_20260308_095213_495227",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:52:13.495225",
+    "payload": {
+      "subreddit": "nonexistent",
+      "title": "Test Title",
+      "text": "Test content"
+    },
+    "error": "Subreddit not found",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:52:13.495225",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095213_823386": {
+    "id": "reddit_20260308_095213_823386",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:52:13.823385",
+    "payload": {
+      "subreddit": "test",
+      "title": "Test",
+      "text": "Test"
+    },
+    "error": "received 401 HTTP response",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:52:13.823385",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095238_347453": {
+    "id": "reddit_20260308_095238_347453",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:52:38.347451",
+    "payload": {
+      "subreddit": "test",
+      "title": "Test Title",
+      "text": "Test content"
+    },
+    "error": "Invalid credentials",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:52:38.347451",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095238_351345": {
+    "id": "reddit_20260308_095238_351345",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:52:38.351343",
+    "payload": {
+      "subreddit": "nonexistent",
+      "title": "Test Title",
+      "text": "Test content"
+    },
+    "error": "Subreddit not found",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:52:38.351343",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095348_074560": {
+    "id": "reddit_20260308_095348_074560",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:53:48.074558",
+    "payload": {
+      "subreddit": "test",
+      "title": "Test Title",
+      "text": "Test content"
+    },
+    "error": "Invalid credentials",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:53:48.074558",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095348_075751": {
+    "id": "reddit_20260308_095348_075751",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:53:48.075749",
+    "payload": {
+      "subreddit": "nonexistent",
+      "title": "Test Title",
+      "text": "Test content"
+    },
+    "error": "Subreddit not found",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:53:48.075749",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095437_131853": {
+    "id": "reddit_20260308_095437_131853",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:54:37.131851",
+    "payload": {
+      "subreddit": "test",
+      "title": "Test Title",
+      "text": "Test content"
+    },
+    "error": "Invalid credentials",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:54:37.131851",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095437_132999": {
+    "id": "reddit_20260308_095437_132999",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:54:37.132997",
+    "payload": {
+      "subreddit": "nonexistent",
+      "title": "Test Title",
+      "text": "Test content"
+    },
+    "error": "Subreddit not found",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:54:37.132997",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095804_455282": {
+    "id": "reddit_20260308_095804_455282",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:58:04.455280",
+    "payload": {
+      "subreddit": "test",
+      "title": "Test Title",
+      "text": "Test content"
+    },
+    "error": "Invalid credentials",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:58:04.455280",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095804_459099": {
+    "id": "reddit_20260308_095804_459099",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:58:04.459097",
+    "payload": {
+      "subreddit": "nonexistent",
+      "title": "Test Title",
+      "text": "Test content"
+    },
+    "error": "Subreddit not found",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:58:04.459097",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095804_770480": {
+    "id": "reddit_20260308_095804_770480",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:58:04.770479",
+    "payload": {
+      "subreddit": "test",
+      "title": "Test",
+      "text": "Test"
+    },
+    "error": "received 401 HTTP response",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:58:04.770479",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095854_906394": {
+    "id": "reddit_20260308_095854_906394",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:58:54.906392",
+    "payload": {
+      "subreddit": "test",
+      "title": "Test Title",
+      "text": "Test content"
+    },
+    "error": "Invalid credentials",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:58:54.906392",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095854_910532": {
+    "id": "reddit_20260308_095854_910532",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:58:54.910530",
+    "payload": {
+      "subreddit": "nonexistent",
+      "title": "Test Title",
+      "text": "Test content"
+    },
+    "error": "Subreddit not found",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:58:54.910530",
+    "recoverable": true,
+    "metadata": null
+  },
+  "reddit_20260308_095855_225051": {
+    "id": "reddit_20260308_095855_225051",
+    "platform": "reddit",
+    "timestamp": "2026-03-08T09:58:55.225050",
+    "payload": {
+      "subreddit": "test",
+      "title": "Test",
+      "text": "Test"
+    },
+    "error": "received 401 HTTP response",
+    "attempts": 3,
+    "last_attempt": "2026-03-08T09:58:55.225050",
+    "recoverable": true,
+    "metadata": null
+  }
+}
